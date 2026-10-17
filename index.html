@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#040a0c">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="坦克大战 TANK BATTLE — 一款霓虹街机风 HTML5 坦克游戏。守卫基地、击退敌军、收集补给，纯 Canvas 打造，无需任何依赖。">
+  <meta property="og:title" content="坦克大战 · TANK BATTLE">
+  <meta property="og:description" content="霓虹街机风 HTML5 坦克大战。守卫老鹰，击退敌军，挑战无尽关卡。">
+  <meta property="og:type" content="website">
+  <title>坦克大战 · TANK BATTLE</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__grid"></div>
+    <div class="ambient__glow ambient__glow--cyan"></div>
+    <div class="ambient__glow ambient__glow--amber"></div>
+    <div class="ambient__noise"></div>
+  </div>
+
+  <div class="page">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="presentation">
+            <path d="M4 7h6v2H4zm18 0h6v2h-6z" fill="currentColor" opacity=".55"/>
+            <path d="M5 10h5v16H5zm17 0h5v16h-5z" fill="currentColor" opacity=".35"/>
+            <path d="M9 11h14v14H9z" fill="currentColor"/>
+            <path d="M13 4h6v9h-6z" fill="currentColor"/>
+            <path d="M14 1h4v5h-4z" fill="currentColor"/>
+            <path d="M9 13h14v3H9z" fill="#081014" opacity=".55"/>
+            <path d="M11 23h4v2h-4zm9 0h2v2h-2z" fill="#081014" opacity=".65"/>
+          </svg>
+        </span>
+        <div class="brand__copy">
+          <p class="brand__eyebrow">NEON ARCADE · UNIT 1985</p>
+          <p class="brand__title">坦克大战 <span>TANK BATTLE</span></p>
+        </div>
+      </div>
+
+      <div class="masthead__actions">
+        <button class="tool-button" id="sound-button" type="button" aria-label="关闭音效" aria-pressed="true" title="音效 (M)">
+          <svg class="icon icon--sound-on" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/>
+            <path d="M16 8.5a5 5 0 0 1 0 7M18.8 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <svg class="icon icon--sound-off" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4Z" fill="currentColor"/>
+            <path d="m16 9 5 6m0-6-5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="tool-button" id="pause-button" type="button" aria-label="暂停游戏" title="暂停 (P)" disabled>
+          <svg class="icon icon--pause" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+            <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+          </svg>
+          <svg class="icon icon--play" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5.5v13l10-6.5-10-6.5Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="tool-button" id="fullscreen-button" type="button" aria-label="切换全屏" title="全屏">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="arcade">
+      <section class="cabinet" id="cabinet" aria-label="坦克大战街机">
+        <div class="hud" aria-label="游戏状态">
+          <div class="hud__block">
+            <span class="hud__label">SCORE</span>
+            <strong class="hud__number" id="score">000000</strong>
+          </div>
+          <div class="hud__block">
+            <span class="hud__label">HI-SCORE</span>
+            <strong class="hud__number hud__number--hi" id="high-score">000000</strong>
+          </div>
+          <div class="hud__block hud__block--stage">
+            <span class="hud__label">STAGE</span>
+            <span class="stage-readout"><strong class="hud__number" id="stage">01</strong><small id="stage-name">OUTPOST</small></span>
+          </div>
+          <div class="hud__block hud__block--power">
+            <span class="hud__label">FIREPOWER</span>
+            <div class="power-meter" id="power-meter" aria-label="火力等级">
+              <i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="hud__block hud__block--lives">
+            <span class="hud__label">LIVES</span>
+            <div class="lives" id="lives" aria-label="剩余生命"></div>
+          </div>
+          <div class="hud__block hud__block--enemy">
+            <span class="hud__label">ENEMY</span>
+            <div class="enemy-readout">
+              <strong id="enemy-count">00</strong>
+              <span class="enemy-meter"><i id="enemy-meter-fill"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-frame">
+          <div class="screen" id="game-screen">
+            <canvas id="game" width="800" height="800" tabindex="-1">你的浏览器不支持 Canvas，请更换现代浏览器。</canvas>
+            <div class="screen-fx screen-fx--scanlines" aria-hidden="true"></div>
+            <div class="screen-fx screen-fx--vignette" aria-hidden="true"></div>
+            <div class="screen-fx screen-fx--glare" aria-hidden="true"></div>
+
+            <div class="stage-banner" id="stage-banner" aria-hidden="true">
+              <span class="stage-banner__kicker">INCOMING</span>
+              <strong class="stage-banner__stage" id="banner-stage">STAGE 01</strong>
+              <span class="stage-banner__name" id="banner-name">前哨站</span>
+              <span class="stage-banner__ready">GET READY</span>
+            </div>
+
+            <div class="toast" id="toast" role="status" aria-live="polite">
+              <span class="toast__glyph" id="toast-glyph">★</span>
+              <span class="toast__copy">
+                <strong id="toast-title"></strong>
+                <span id="toast-sub"></span>
+              </span>
+            </div>
+
+            <section class="overlay overlay--title is-active" data-overlay="title" aria-label="游戏开始">
+              <div class="title-panel">
+                <p class="title-kicker"><span></span> ARCADE PROTOCOL <span></span></p>
+                <h1 class="title-zh">坦克<span>大战</span></h1>
+                <p class="title-en">TANK <em>BATTLE</em></p>
+                <p class="title-desc">守住最后的老鹰。碾碎钢铁洪流。</p>
+                <button class="button button--primary" id="start-button" type="button" data-action="start">
+                  <span>开始战斗</span>
+                  <kbd>ENTER</kbd>
+                </button>
+                <div class="title-meta">
+                  <span><b>03</b> 条命</span>
+                  <span><b>∞</b> 个关卡</span>
+                  <span><b>01</b> 只老鹰</span>
+                </div>
+                <div class="title-hints">
+                  <span><kbd>WASD</kbd> / <kbd>方向键</kbd> 移动</span>
+                  <span><kbd>SPACE</kbd> / <kbd>J</kbd> 开火</span>
+                  <span><kbd>P</kbd> 暂停</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="overlay" data-overlay="pause" aria-label="游戏暂停" aria-hidden="true">
+              <div class="dialog">
+                <p class="dialog__kicker">SYSTEM HALT</p>
+                <h2 class="dialog__title">暂停</h2>
+                <p class="dialog__copy">战场已冻结。喘口气，再继续。</p>
+                <button class="button button--primary" type="button" data-action="resume">
+                  <span>继续战斗</span><kbd>P</kbd>
+                </button>
+                <button class="button button--ghost" type="button" data-action="quit">返回标题</button>
+              </div>
+            </section>
+
+            <section class="overlay" data-overlay="clear" aria-label="关卡完成" aria-hidden="true">
+              <div class="dialog dialog--clear">
+                <p class="dialog__kicker">SECTOR SECURED</p>
+                <h2 class="dialog__title">关卡完成</h2>
+                <div class="result-grid">
+                  <span>当前总分</span><strong id="clear-score">000000</strong>
+                  <span>过关奖励</span><strong id="clear-bonus">+0000</strong>
+                </div>
+                <button class="button button--primary" type="button" data-action="next">
+                  <span>进入下一关</span><kbd>ENTER</kbd>
+                </button>
+                <p class="dialog__foot" id="clear-next-stage">NEXT · STAGE 02</p>
+              </div>
+            </section>
+
+            <section class="overlay" data-overlay="over" aria-label="游戏结束" aria-hidden="true">
+              <div class="dialog dialog--over">
+                <p class="dialog__kicker">SIGNAL LOST</p>
+                <h2 class="dialog__title">GAME OVER</h2>
+                <p class="dialog__copy" id="gameover-reason">基地失守。</p>
+                <div class="result-grid">
+                  <span>最终得分</span><strong id="final-score">000000</strong>
+                  <span>历史最高</span><strong id="final-high">000000</strong>
+                  <span>抵达关卡</span><strong id="final-stage">01</strong>
+                </div>
+                <button class="button button--primary" type="button" data-action="restart">
+                  <span>再战一次</span><kbd>ENTER</kbd>
+                </button>
+                <button class="button button--ghost" type="button" data-action="quit">返回标题</button>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <div class="deck">
+          <div class="deck__legend" aria-label="操作说明">
+            <span><kbd>WASD</kbd><span>移动</span></span>
+            <span><kbd>SPACE</kbd><span>开火</span></span>
+            <span><kbd>P</kbd><span>暂停</span></span>
+            <span><kbd>M</kbd><span>静音</span></span>
+          </div>
+          <div class="deck__status">
+            <i class="status-led" id="status-led" aria-hidden="true"></i>
+            <span id="status-text">STANDBY</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="touch-controls" id="touch-controls" aria-label="触屏控制">
+        <div class="dpad" aria-label="方向控制">
+          <button class="dpad__key dpad__key--up" type="button" data-dir="up" aria-label="向上">
+            <span></span>
+          </button>
+          <button class="dpad__key dpad__key--left" type="button" data-dir="left" aria-label="向左">
+            <span></span>
+          </button>
+          <div class="dpad__hub" aria-hidden="true"></div>
+          <button class="dpad__key dpad__key--right" type="button" data-dir="right" aria-label="向右">
+            <span></span>
+          </button>
+          <button class="dpad__key dpad__key--down" type="button" data-dir="down" aria-label="向下">
+            <span></span>
+          </button>
+        </div>
+        <button class="fire-button" id="fire-button" type="button" aria-label="开火">
+          <span>FIRE</span>
+        </button>
+      </section>
+
+      <footer class="footer">
+        <span>HTML5 CANVAS · ZERO DEPENDENCIES</span>
+        <span class="footer__divider" aria-hidden="true"></span>
+        <span>守卫老鹰 · 永不言退</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>

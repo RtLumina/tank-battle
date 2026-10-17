@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a171c"/>
+      <stop offset="1" stop-color="#030708"/>
+    </linearGradient>
+    <linearGradient id="tank" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe48a"/>
+      <stop offset=".5" stop-color="#ffc857"/>
+      <stop offset="1" stop-color="#f29b21"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="none" stroke="#61e8ff" stroke-opacity=".25"/>
+  <g fill="url(#tank)">
+    <rect x="9" y="18" width="10" height="33" rx="2"/>
+    <rect x="45" y="18" width="10" height="33" rx="2"/>
+    <rect x="17" y="23" width="30" height="28" rx="3"/>
+    <rect x="25" y="11" width="14" height="18" rx="3"/>
+    <rect x="28" y="4" width="8" height="10" rx="2"/>
+  </g>
+  <g fill="#071114" opacity=".7">
+    <rect x="12" y="22" width="4" height="3"/>
+    <rect x="12" y="29" width="4" height="3"/>
+    <rect x="12" y="36" width="4" height="3"/>
+    <rect x="12" y="43" width="4" height="3"/>
+    <rect x="48" y="22" width="4" height="3"/>
+    <rect x="48" y="29" width="4" height="3"/>
+    <rect x="48" y="36" width="4" height="3"/>
+    <rect x="48" y="43" width="4" height="3"/>
+  </g>
+  <path d="M30 32h4v8h-4z" fill="#071114" opacity=".5"/>
+</svg>
